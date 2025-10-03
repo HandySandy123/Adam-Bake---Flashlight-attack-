@@ -48,7 +48,9 @@ namespace Enemy_Scripts
                     return true;
                 }
             }
+            Debug.Log("Lost player");
             player = null;
+            movement.player = null;
             movement.seesPlayer = false;
             return false;
         }

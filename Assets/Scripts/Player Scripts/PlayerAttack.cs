@@ -8,12 +8,12 @@ public class PlayerAttack : MonoBehaviour
     private float  minOuter, maxOuter, angleOffset = 5.0f;
     [SerializeField]private float attackSpeed = 10f;
     public bool isAttacking = false;
-    private readonly float attackStrength = 6;
-    private float attackModifier = 1.125f;
+    private readonly float attackStrength = 10;
+    private float attackModifier = 1.5f;
     private float currAttackStrength;
     // public int rayAmount = 5;
     // public float rayAngle = 10; 
-    public float rayDistance = 8f;
+    public float rayDistance = 12f;
     public bool targetHit;
     [SerializeField] private GameObject enemy;
 
@@ -55,11 +55,11 @@ public class PlayerAttack : MonoBehaviour
             if (hit.collider.gameObject.CompareTag("Enemy"))
             {
                 enemy = hit.collider.gameObject;
-                // if(enemy.TryGetComponent<EnemyHealth>(out EnemyHealth health))
-                // {
-                //     health.takeDamage(Attack());
-                //     
-                // }
+                if(enemy.TryGetComponent<EnemyHealth>(out var health))
+                {
+                    health.takeDamage(Attack());
+                    
+                }
             } 
             targetHit = true;
         }
@@ -73,6 +73,7 @@ public class PlayerAttack : MonoBehaviour
 
     public float Attack()
     {
+        Debug.Log("Attack Strength: " + currAttackStrength);
         return currAttackStrength;
     }
 

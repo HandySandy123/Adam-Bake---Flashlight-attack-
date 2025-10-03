@@ -69,7 +69,7 @@ public class ZombieMovement : MonoBehaviour
 
     IEnumerator Attacking()
     {
-        while (seesPlayer)
+        while (seesPlayer && navMeshAgent.enabled)
         {
             transform.LookAt(player.position);
             navMeshAgent.destination = player.position;
