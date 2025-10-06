@@ -8,7 +8,7 @@ public class PlayerAttack : MonoBehaviour
     private float  minOuter, maxOuter, angleOffset = 5.0f;
     [SerializeField]private float attackSpeed = 10f;
     public bool isAttacking = false;
-    private readonly float attackStrength = 10;
+    private readonly float attackStrength = 50;
     private float attackModifier = 1.5f;
     private float currAttackStrength;
     // public int rayAmount = 5;

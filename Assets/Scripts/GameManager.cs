@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
     [SerializeField] private GameObject damageImageGo;
-    private Image damageImage;
+    Image damageImage;
     public GameObject player;
 
     public GameObject[] enemies;
@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        damageImage = damageImageGo.GetComponent<Image>();
+        damageImage.color = new Color(1f, 1f, 1f, 0f);
         
         
         if (instance != null && instance != this) 
@@ -26,14 +28,19 @@ public class GameManager : MonoBehaviour
         } 
     }
 
-    void Start()
+    private void bloodyScreen()
     {
-        
-    }
-
-    void setPlayer(GameObject player)
-    {
-        this.player = player;
+        switch (player.GetComponent<playerHealth>().health)
+        {
+            case 4: damageImage.color = new Color(1f, 1f, 1f, 0f); 
+                break;
+            case 3: damageImage.color = new Color(1f, 1f, 1f, 0.25f);
+                break;
+            case 2: damageImage.color = new Color(1f, 1f, 1f, 0.5f);
+                break;
+            case 1: damageImage.color = new Color(1f, 1f, 1f, 1f);
+                break;
+        }
     }
 
     public void resetLevel()

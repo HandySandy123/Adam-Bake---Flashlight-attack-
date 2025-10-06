@@ -9,7 +9,8 @@ public class ZombieBite : MonoBehaviour
         {
             if (other.TryGetComponent<playerHealth>(out var pHealth))
             {
-                pHealth.health--;
+                pHealth.takeDamage(1);
+                Debug.Log("Player health: " + pHealth.health);
             }
         }
     }
