@@ -21,7 +21,8 @@ public class ZombieMovement : MonoBehaviour
     private NavMeshSurface surface;
     
     public readonly float rotationWait = 2;
-    [SerializeField]private float currRotationWait, rotationAngle, rotationTime = 2, t = 0;
+    [SerializeField] private float currRotationWait, rotationAngle, rotationTime = 2;
+    private float t = 0;
     public bool seesPlayer { get; set; }
     
     public enemyState currState;
@@ -42,38 +43,44 @@ public class ZombieMovement : MonoBehaviour
     {
         if (prevState != currState)
         {
-            if (currState == enemyState.Idle)
+            switch (currState)
             {
-                StartCoroutine(nameof(idling));
-            } else if (currState == enemyState.Rotating)
-            {
-                StartCoroutine(nameof(rotateEnemy));
-            } else if (currState == enemyState.Attacking)
-            {
-                StartCoroutine(nameof(Attacking));
+                case enemyState.Attacking :
+                    Attacking();
+                    break;
+                case enemyState.Idle :
+                    Idle();
+                    break;
+                case enemyState.Rotating :
+                    StartCoroutine(rotateEnemy());
+                    break;
             }
+            
             prevState = currState;
         }
     }
 
-    IEnumerator idling()
+    void Idle()
     {
-        while (currRotationWait > 0)
+        StopAllCoroutines();
+        if (currRotationWait > 0)
         {
             currRotationWait -= Time.deltaTime;
-            yield return null;
         }
-        if (currRotationWait <= 0) currState = enemyState.Rotating;
+        else
+        {
+            currState = enemyState.Rotating;
+        }
         rotationAngle = Random.Range(-180, 180);
     }
 
-    IEnumerator Attacking()
+    void Attacking()
     {
-        while (seesPlayer && navMeshAgent.enabled)
+        StopAllCoroutines();
+        if (seesPlayer && navMeshAgent.enabled)
         {
             transform.LookAt(player.position);
-            navMeshAgent.destination = player.position;
-            yield return null;
+            navMeshAgent.SetDestination(player.position);
         }
         currState = enemyState.Idle;
     }
@@ -84,6 +91,7 @@ public class ZombieMovement : MonoBehaviour
         //Debug.Log("Rotation target: " + rotationTarget);
         Quaternion startRotation = transform.rotation;
         float endYRot = rotationAngle;
+        Debug.Log(gameObject.name + " Is rotating");
 
         while (t < rotationTime)
         {
@@ -93,10 +101,12 @@ public class ZombieMovement : MonoBehaviour
             if (player != null)
             {
                 currState = enemyState.Attacking;
+                StopAllCoroutines();
             }
+            
             yield return null;
         } 
-        
+        StopAllCoroutines();
         currRotationWait = rotationWait;
         t = 0;
         currState = enemyState.Idle;
